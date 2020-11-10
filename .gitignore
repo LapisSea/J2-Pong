@@ -1,0 +1,11 @@
+/*
+/*/
+!/src/
+!/.idea/
+!.gitignore
+!/LICENSE
+!/README.md
+!/CODE_OF_CONDUCT.md
+!pom.xml
+!.editorconfig
+/*/target/

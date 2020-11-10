@@ -1,0 +1,11 @@
+{
+  "connectPort": 666,
+  "keysDown": [
+    "DOWN",
+    "S"
+  ],
+  "keysUp": [
+    "UP",
+    "W"
+  ]
+}

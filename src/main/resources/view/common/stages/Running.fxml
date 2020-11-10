@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--suppress JavaFxDefaultTag -->
+
+<?import javafx.scene.layout.*?>
+<BorderPane minHeight="100.0" minWidth="100.0" prefHeight="400.0" prefWidth="400.0" stylesheets="@../../client/Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lapissea.j2.pong.game.client.elements.RunningStage">
+    <left>
+        <AnchorPane fx:id="elLeftPlArea" BorderPane.alignment="CENTER">
+            <children>
+                <Pane fx:id="elLeftPl" prefHeight="50.0" prefWidth="10.0" snapToPixel="false" styleClass="Player"/>
+            </children>
+        </AnchorPane>
+    </left>
+    <right>
+        <AnchorPane fx:id="elRightPlArea" BorderPane.alignment="CENTER">
+            <children>
+                <Pane fx:id="elRightPl" prefHeight="50.0" prefWidth="10.0" snapToPixel="false" styleClass="Player"/>
+            </children>
+        </AnchorPane>
+    </right>
+    <center>
+        <AnchorPane fx:id="elBallArea" BorderPane.alignment="CENTER">
+            <children>
+                <Pane id="Ball" fx:id="elBall" prefHeight="10.0" prefWidth="10.0" snapToPixel="false"/>
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
