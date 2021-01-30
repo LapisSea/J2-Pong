@@ -96,7 +96,7 @@ public class Persistence{
 	private static void ensureDef() throws IOException{
 		
 		File dtd=new File(DTD_SAVE_FILENAME);
-//	    	if(dtd.exists()&&dtd.isFile()) return;
+		if(dtd.exists()&&dtd.isFile()) return;
 		
 		try(var data=Utils.makeRawUrl("/"+DTD_SAVE_FILENAME).openStream();
 		    var out=new FileOutputStream(dtd)){
