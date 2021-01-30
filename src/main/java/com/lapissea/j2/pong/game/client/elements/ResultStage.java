@@ -28,7 +28,7 @@ public class ResultStage extends GameStageController{
 		this.state=state;
 		elReadyButton.setDisable(state.getThisPlayer().isReady());
 		
-		int needed=(int)(2-Stream.of(state.getPlayerLeft(), state.getPlayerRight()).filter(Optional::isPresent).map(Optional::get).filter(e->e.isReady()).count());
+		int needed=(int)(2-Stream.of(state.getPlayerLeft(), state.getPlayerRight()).filter(Optional::isPresent).map(Optional::get).filter(Player::isReady).count());
 		elStatus.setText(needed+" "+TextUtil.plural("player", needed)+" not ready");
 		
 		Consumer<Optional<Player>> add=pll->{

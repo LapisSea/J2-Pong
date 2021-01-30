@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
-import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
 import static com.lapissea.j2.pong.common.Utils.*;
 
@@ -22,7 +22,7 @@ public class MessageBox extends GridPane{
 	public Label     elUsername;
 	public Label     elMessageText;
 	
-	public MessageBox(IntFunction<ObjectProperty<Profile>> profileSource, Message message) throws IOException{
+	public MessageBox(LongFunction<ObjectProperty<Profile>> profileSource, Message message) throws IOException{
 		
 		FXMLLoader loader=new FXMLLoader(Utils.makefxmlUrl(getClass()));
 		loader.setRoot(this);

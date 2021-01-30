@@ -27,14 +27,14 @@ public class ClientGameSide{
 	private GameState state;
 	
 	private boolean      closed;
-	private int          profileId=-1;
+	private long         profileId=-1;
 	private ActionSocket socket;
 	
 	private final Consumer<Message>     onMessage;
 	private final Consumer<Set<Status>> statusChange;
 	private final Consumer<GameState>   updateGameState;
 	
-	private final Map<Integer, ObjectProperty<Profile>> profiles=new HashMap<>();
+	private final Map<Long, ObjectProperty<Profile>> profiles=new HashMap<>();
 	
 	private BufferedImage loadingIcon, errorIcon;
 	
@@ -140,11 +140,11 @@ public class ClientGameSide{
 		send(new NetMessage.MessageSend(message));
 	}
 	
-	public synchronized ObjectProperty<Profile> getProfile(int id){
+	public synchronized ObjectProperty<Profile> getProfile(long id){
 		return profiles.computeIfAbsent(id, this::requestProfile);
 	}
 	
-	private ObjectProperty<Profile> requestProfile(int id){
+	private ObjectProperty<Profile> requestProfile(long id){
 		try{
 			send(new NetMessage.FetchProfileRequest(id));
 		}catch(IOException e){

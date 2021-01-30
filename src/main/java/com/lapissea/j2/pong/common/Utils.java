@@ -3,6 +3,7 @@ package com.lapissea.j2.pong.common;
 import com.google.gson.GsonBuilder;
 import com.lapissea.j2.pong.engine.Status;
 import com.lapissea.util.ObjectHolder;
+import com.lapissea.util.TextUtil;
 import com.lapissea.util.UtilL;
 import com.lapissea.util.function.UnsafeConsumer;
 import com.lapissea.util.function.UnsafeRunnable;
@@ -37,13 +38,21 @@ public class Utils{
 		}
 		
 		public Object get(String name){
-			return data.get(name);
+			Object val=data.get(name);
+			Objects.requireNonNull(val, ()->name+" is not present in config");
+			return val;
 		}
 		
 		public int getInt(String name){
 			var o=get(name);
 			if(o instanceof Number n) return n.intValue();
 			return Integer.parseInt(o.toString());
+		}
+		
+		public String getString(String name){
+			var o=get(name);
+			if(o instanceof String s) return s;
+			return TextUtil.toString(o);
 		}
 	}
 	

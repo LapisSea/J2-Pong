@@ -32,9 +32,9 @@ public class ServerSideGame{
 	private class Connection{
 		private final ActionSocket socket;
 		
-		protected final int  profileId=newUID();
-		protected       long ping     =100;
-		private         long stamp;
+		protected long profileId=newUID();
+		protected long ping     =100;
+		private   long stamp;
 		
 		Profile profile;
 		
@@ -66,7 +66,7 @@ public class ServerSideGame{
 				}
 				writeForEachCon(new NetMessage.MessageBroadcast(new Message(profileId, msg.text())));
 			}else if(message instanceof NetMessage.FetchProfileRequest fp){
-				int     id=fp.profileId();
+				long    id=fp.profileId();
 				Profile p =profiles.get(id);
 				
 				if(p==null){
@@ -86,7 +86,27 @@ public class ServerSideGame{
 					}
 				}
 				
-				var p  =login.getProfile().withId(profileId);
+				
+				var p=login.getProfile();
+				
+				var pName=p.userName();
+				
+				synchronized(connections){
+					if(connections.stream().anyMatch(c->c.profile!=null&&c.profile.userName().equals(pName))){
+						write(new NetMessage.LoginResult(false, -1, "Username in use"));
+						return;
+					}
+				}
+				
+				profiles.values()
+				        .stream()
+				        .filter(p1->p1.userName().equals(pName))
+				        .mapToLong(Profile::id)
+				        .findAny()
+				        .ifPresent(recycleId->profileId=recycleId);
+				
+				p=p.withId(profileId);
+				
 				var img=p.icon();
 				
 				if(img.getWidth()!=img.getHeight()){
@@ -102,6 +122,9 @@ public class ServerSideGame{
 				log(profile.userName(), "logged in");
 				
 				profiles.put(profileId, profile);
+				
+				saveGameConfig();
+				
 				write(new NetMessage.LoginResult(true, profileId, null));
 				write(new NetMessage.StatusChange(status));
 				
@@ -162,11 +185,11 @@ public class ServerSideGame{
 	private final GameState        state;
 	private final List<Connection> connections=new ArrayList<>();
 	
-	private final Map<Integer, Profile> profiles=new HashMap<>();
+	private final Map<Long, Profile> profiles=new HashMap<>();
 	
 	private final List<Message> chatHistory=new ArrayList<>();
 	
-	private int         uid;
+	private long        uid;
 	private Set<Status> status=EnumSet.of(RUNNING, WAITING_PLAYERS);
 	
 	private final Consumer<String>      logFun;
@@ -180,8 +203,13 @@ public class ServerSideGame{
 			log("game done");
 			resetState();
 			setStatus(RESULT);
+			saveGameConfig();
 		}, 20);
-		state.listenChange(this::broadcastState);
+		
+		loadGameConfig();
+		saveGameConfig();
+		
+		state.listenChange(this::applyGameState);
 		
 		state.isRunning.addListener(e->{
 			if(state.isRunning.get()){
@@ -198,16 +226,26 @@ public class ServerSideGame{
 			}
 		});
 		
-		state.playerSize.addListener(e->broadcastState());
-		state.playerSpeed.addListener(e->broadcastState());
-		state.ballSpeed.addListener(e->broadcastState());
+		state.playerSize.addListener(e->applyGameState());
+		state.playerSpeed.addListener(e->applyGameState());
+		state.ballSpeed.addListener(e->applyGameState());
+	}
+	
+	private void saveGameConfig(){
+		Persistence.saveGameState(state, profiles);
+	}
+	private void loadGameConfig(){
+		Persistence.loadGameState(state, profile->{
+			uid=Math.max(uid, profile.id());
+			profiles.putIfAbsent(profile.id(), profile);
+		});
 	}
 	
 	private void resetState(){
 		state.reset();
 	}
 	
-	private synchronized int newUID(){
+	private synchronized long newUID(){
 		return ++uid;
 	}
 	
@@ -270,7 +308,7 @@ public class ServerSideGame{
 	private       long                    syncStamp;
 	private final ExecutorService         exec=Executors.newSingleThreadExecutor();
 	
-	private void broadcastState(){
+	private void applyGameState(){
 		if(syncThrottleTask==null){
 			syncThrottleTask=async(()->{
 				var elapsed =syncStamp-System.currentTimeMillis();
@@ -281,16 +319,10 @@ public class ServerSideGame{
 				syncStamp=System.currentTimeMillis();
 				
 				writeForEachCon(new NetMessage.GameStateBroadcast(state));
+				
+				saveGameConfig();
 			}, exec);
 		}
-	}
-	
-	public void modifyStatus(Consumer<Set<Status>> modifier){
-		var sNew=EnumSet.copyOf(status);
-		modifier.accept(sNew);
-		if(sNew.contains(RESULT)) sNew.remove(WAITING_START);
-		setStatus(sNew);
-		broadcastState();
 	}
 	
 	
@@ -304,7 +336,7 @@ public class ServerSideGame{
 		statusChange.accept(status);
 		
 		writeForEachCon(new NetMessage.StatusChange(status));
-		broadcastState();
+		applyGameState();
 	}
 	
 	private void log(Object... message){

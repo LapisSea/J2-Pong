@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Player{
 	
 	public static Player read(DataInputStream src) throws IOException{
-		int id=src.readInt();
+		long id=src.readLong();
 		if(id==-1) return null;
 		
 		Player player=new Player(id);
@@ -23,11 +23,11 @@ public class Player{
 	
 	public static void write(DataOutputStream dest, Player player) throws IOException{
 		if(player==null){
-			dest.writeInt(-1);
+			dest.writeLong(-1);
 			return;
 		}
 		
-		dest.writeInt(player.getProfileId());
+		dest.writeLong(player.getProfileId());
 		dest.writeFloat(player.getPos());
 		dest.writeBoolean(player.isReady());
 		dest.writeFloat(player.getMovement());
@@ -35,7 +35,7 @@ public class Player{
 	}
 	
 	
-	private final int     profileId;
+	private final long    profileId;
 	private       boolean ready;
 	
 	final   FloatProperty movement=new SimpleFloatProperty();
@@ -43,7 +43,7 @@ public class Player{
 	
 	private float pos;
 	
-	public Player(int profileId){
+	public Player(long profileId){
 		this.profileId=profileId;
 		reset();
 	}
@@ -56,7 +56,7 @@ public class Player{
 		this.pos=pos;
 	}
 	
-	public int getProfileId(){
+	public long getProfileId(){
 		return profileId;
 	}
 	

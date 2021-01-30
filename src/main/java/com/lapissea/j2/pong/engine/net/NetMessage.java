@@ -35,15 +35,15 @@ public interface NetMessage{
 		public Profile getProfile()  { return profile.get(); }
 	}
 	
-	record LoginResult(boolean success, int profileId, String reason) implements Serializable, NetMessage{}
+	record LoginResult(boolean success, long profileId, String reason) implements Serializable, NetMessage{}
 	
 	record MessageBroadcast(Message messageSend) implements Serializable, NetMessage{}
 	
 	record MessageSend(String text) implements Serializable, NetMessage{}
 	
-	record FetchProfileFail(int profileId) implements Serializable, NetMessage{}
+	record FetchProfileFail(long profileId) implements Serializable, NetMessage{}
 	
-	record FetchProfileRequest(int profileId) implements Serializable, NetMessage{}
+	record FetchProfileRequest(long profileId) implements Serializable, NetMessage{}
 	
 	record FetchProfile(Profile.Ball profile) implements Serializable, NetMessage{
 		public FetchProfile(Profile profile){ this(new Profile.Ball(profile)); }

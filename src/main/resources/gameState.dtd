@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!ELEMENT state (values,profiles?)>
+
+	<!ELEMENT values (playerSize, ballSpeed, playerSpeed)>
+	<!ELEMENT playerSize (#PCDATA)>
+	<!ELEMENT ballSpeed (#PCDATA)>
+	<!ELEMENT playerSpeed (#PCDATA)>
+
+	<!ELEMENT profiles (profile+)>
+	<!ELEMENT profile (id,name)>
+	<!ELEMENT id (#PCDATA)>
+	<!ELEMENT name (#PCDATA)>
+
+

@@ -39,7 +39,7 @@ public class GameView{
 	public AnchorPane elStageContainer;
 	
 	private final LateInit<ClientGameSide> game;
-	private       int                      lastProfile=-1;
+	private       long                     lastProfile=-1;
 	
 	private final Map<Status, GameControlledNode> stageNodes=new HashMap<>();
 	
@@ -52,10 +52,10 @@ public class GameView{
 			while(true){
 				try{
 					return new ClientGameSide(
-							profile,
-							msg->fxThread(()->addMessage(msg)),
-							newStages->fxThread(()->showStages(newStages)),
-							state->fxThread(()->updateState(state))
+						profile,
+						msg->fxThread(()->addMessage(msg)),
+						newStages->fxThread(()->showStages(newStages)),
+						state->fxThread(()->updateState(state))
 					);
 					
 				}catch(IOException e){

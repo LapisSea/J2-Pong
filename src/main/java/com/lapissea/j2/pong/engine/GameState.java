@@ -21,7 +21,7 @@ public class GameState{
 	
 	private static final float THRESHOLD=0.00001F;
 	
-	private int clientId=-1;
+	private long clientId=-1;
 	
 	private Player playerLeft;
 	private Player playerRight;
@@ -222,7 +222,7 @@ public class GameState{
 		dest.writeFloat(playerSpeed.get());
 	}
 	
-	public void playerJoined(int profileId){
+	public void playerJoined(long profileId){
 		if(playerLeft==null){
 			playerLeft=new Player(profileId);
 			playerLeft.movement.addListener(e->notifyChange());
@@ -233,7 +233,7 @@ public class GameState{
 		updateCanRun();
 	}
 	
-	public void playerReady(int profileId, boolean ready){
+	public void playerReady(long profileId, boolean ready){
 		if(profileId==-1) throw new IllegalStateException();
 		var pl=getPlayer(profileId);
 		if(pl.isReady()==ready) return;
@@ -305,7 +305,7 @@ public class GameState{
 		return Optional.ofNullable(playerRight);
 	}
 	
-	public void initClientId(int clientId){
+	public void initClientId(long clientId){
 		this.clientId=clientId;
 	}
 	
@@ -322,7 +322,7 @@ public class GameState{
 		return Stream.of(getPlayerLeft(), getPlayerRight()).filter(Optional::isPresent).map(Optional::get);
 	}
 	
-	public Player getPlayer(int profileId){
+	public Player getPlayer(long profileId){
 		return playerStream().filter(e->e.getProfileId()==profileId).findAny().orElseThrow();
 	}
 	

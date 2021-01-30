@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Objects;
 
-public record Profile(String userName, BufferedImage icon, int id){
+public record Profile(String userName, BufferedImage icon, long id){
 	
 	public Profile{
 		Objects.requireNonNull(icon);
@@ -32,14 +32,14 @@ public record Profile(String userName, BufferedImage icon, int id){
 			if(value!=null){
 				out.writeUTF(value.userName);
 				writeImg(out, value.icon);
-				out.writeInt(value.id);
+				out.writeLong(value.id);
 			}
 		}
 		
 		@Override
 		public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException{
 			if(in.readBoolean()){
-				value=new Profile(in.readUTF(), readImg(in), in.readInt());
+				value=new Profile(in.readUTF(), readImg(in), in.readLong());
 			}
 		}
 	}
@@ -68,7 +68,7 @@ public record Profile(String userName, BufferedImage icon, int id){
 		return new Profile(userName, icon, id);
 	}
 	
-	public Profile withId(int id){
+	public Profile withId(long id){
 		return new Profile(userName, icon, id);
 	}
 }
