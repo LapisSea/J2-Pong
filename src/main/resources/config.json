@@ -8,5 +8,6 @@
 		"UP",
 		"W"
 	],
-	"saveFile": "gameState"
+	"saveFile": "gameState",
+	"useRMI": false
 }

@@ -1,6 +1,7 @@
 package com.lapissea.j2.pong.game.server;
 
 import com.lapissea.j2.pong.common.Utils;
+import com.lapissea.j2.pong.common.chat.RMI;
 import com.lapissea.j2.pong.engine.GameState;
 import com.lapissea.j2.pong.engine.Profile;
 import com.lapissea.j2.pong.engine.Status;
@@ -198,6 +199,18 @@ public class ServerSideGame{
 	public ServerSideGame(Consumer<String> logFun, Consumer<Set<Status>> statusChange){
 		this.logFun=logFun;
 		this.statusChange=statusChange;
+		
+		if(Utils.getConfig().getBool("useRMI")){
+			RMI.makeService(667, (message, profileId)->{
+				connections.stream().filter(c->c.profileId==profileId).findAny().ifPresent(connection->{
+					try{
+						connection.readMessage(new NetMessage.MessageSend(message));
+					}catch(IOException e){
+						e.printStackTrace();
+					}
+				});
+			});
+		}
 		
 		state=new GameState(()->{}, ()->{
 			log("game done");

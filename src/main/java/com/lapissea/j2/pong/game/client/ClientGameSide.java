@@ -1,6 +1,8 @@
 package com.lapissea.j2.pong.game.client;
 
 import com.lapissea.j2.pong.common.Utils;
+import com.lapissea.j2.pong.common.chat.ChatService;
+import com.lapissea.j2.pong.common.chat.RMI;
 import com.lapissea.j2.pong.engine.GameState;
 import com.lapissea.j2.pong.engine.Profile;
 import com.lapissea.j2.pong.engine.Status;
@@ -29,6 +31,8 @@ public class ClientGameSide{
 	private       boolean      closed;
 	private       long         profileId=-1;
 	private final ActionSocket socket;
+	
+	private final ChatService chatService=Utils.getConfig().getBool("useRMI")?RMI.connectService(667):null;
 	
 	private final Consumer<Message>     onMessage;
 	private final Consumer<Set<Status>> statusChange;
@@ -137,7 +141,11 @@ public class ClientGameSide{
 	}
 	
 	public void sendMessage(String message) throws IOException{
-		send(new NetMessage.MessageSend(message));
+		if(chatService!=null){
+			chatService.recieveMessage(message, profileId);
+		}else{
+			send(new NetMessage.MessageSend(message));
+		}
 	}
 	
 	public synchronized ObjectProperty<Profile> getProfile(long id){
