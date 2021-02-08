@@ -1,11 +1,14 @@
 package com.lapissea.j2.pong.game.client.elements;
 
 import com.lapissea.j2.pong.engine.GameState;
-import com.lapissea.j2.pong.game.client.ClientGameSide;
+import com.lapissea.j2.pong.engine.Profile;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+
+import java.util.function.LongFunction;
 
 public class RunningStage extends GameStageController{
 	
@@ -19,7 +22,7 @@ public class RunningStage extends GameStageController{
 	public Pane       elBall;
 	
 	@Override
-	public void updateState(GameState state, ClientGameSide game){
+	public void updateState(GameState state, LongFunction<ObjectProperty<Profile>> profileSource){
 		var ball=state.getBall();
 		var pos =ball.pos;
 		

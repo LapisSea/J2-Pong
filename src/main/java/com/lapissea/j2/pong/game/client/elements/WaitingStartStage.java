@@ -1,12 +1,14 @@
 package com.lapissea.j2.pong.game.client.elements;
 
 import com.lapissea.j2.pong.engine.GameState;
-import com.lapissea.j2.pong.game.client.ClientGameSide;
+import com.lapissea.j2.pong.engine.Profile;
 import com.lapissea.util.TextUtil;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.util.Optional;
+import java.util.function.LongFunction;
 import java.util.stream.Stream;
 
 public class WaitingStartStage extends GameStageController{
@@ -17,7 +19,7 @@ public class WaitingStartStage extends GameStageController{
 	private GameState state;
 	
 	@Override
-	public void updateState(GameState state, ClientGameSide game){
+	public void updateState(GameState state, LongFunction<ObjectProperty<Profile>> profileSource){
 		this.state=state;
 		elReadyButton.setDisable(state.getThisPlayer().isReady());
 		

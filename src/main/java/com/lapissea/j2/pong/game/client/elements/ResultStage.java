@@ -2,9 +2,10 @@ package com.lapissea.j2.pong.game.client.elements;
 
 import com.lapissea.j2.pong.engine.GameState;
 import com.lapissea.j2.pong.engine.Player;
+import com.lapissea.j2.pong.engine.Profile;
 import com.lapissea.j2.pong.game.Message;
-import com.lapissea.j2.pong.game.client.ClientGameSide;
 import com.lapissea.util.TextUtil;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -12,6 +13,7 @@ import javafx.scene.layout.FlowPane;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.LongFunction;
 import java.util.stream.Stream;
 
 public class ResultStage extends GameStageController{
@@ -24,7 +26,7 @@ public class ResultStage extends GameStageController{
 	private GameState state;
 	
 	@Override
-	public void updateState(GameState state, ClientGameSide game){
+	public void updateState(GameState state, LongFunction<ObjectProperty<Profile>> profileSource){
 		this.state=state;
 		elReadyButton.setDisable(state.getThisPlayer().isReady());
 		
@@ -35,7 +37,7 @@ public class ResultStage extends GameStageController{
 			var player=pll.orElse(null);
 			if(player!=null){
 				try{
-					elResultDest.getChildren().add(new MessageBox(game::getProfile, new Message(player.getProfileId(), player.getWins()+" wins")));
+					elResultDest.getChildren().add(new MessageBox(profileSource, new Message(player.getProfileId(), player.getWins()+" wins")));
 				}catch(IOException ignored){ }
 			}
 		};

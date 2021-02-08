@@ -4,6 +4,7 @@ import com.lapissea.j2.pong.common.GameControlledNode;
 import com.lapissea.j2.pong.engine.Status;
 import com.lapissea.util.TextUtil;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -24,8 +25,8 @@ public class ServerView{
 	public Slider     elPlayerSize;
 	
 	private final ServerSideGame game=new ServerSideGame(
-			msg->fxThread(()->elLog.getChildren().add(new Label(msg))),
-			state->fxThread(()->elStatus.setText(state.toString()))
+		msg->fxThread(()->elLog.getChildren().add(new Label(msg))),
+		state->fxThread(()->elStatus.setText(state.toString()))
 	);
 	
 	public Slider     elPlayerSpeed;
@@ -63,7 +64,7 @@ public class ServerView{
 		Runnable doChange=()->{
 			elInfo.setText(TextUtil.toNamedPrettyJson(state.playerStream().toArray()));
 			
-			stageNode.controller().updateState(state, null);
+			stageNode.controller().updateState(state, value->new SimpleObjectProperty<>());
 		};
 		
 		state.listenChange(()->fxThread(doChange));

@@ -71,7 +71,7 @@ public class GameView{
 		lastState=state;
 		for(GameControlledNode node : stageNodes.values()){
 			if(!node.node().isVisible()) continue;
-			node.controller().updateState(state, game.get());
+			node.controller().updateState(state, getGame()::getProfile);
 		}
 	}
 	
