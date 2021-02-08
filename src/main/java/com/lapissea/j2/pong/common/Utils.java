@@ -54,6 +54,11 @@ public class Utils{
 			if(o instanceof String s) return s;
 			return TextUtil.toString(o);
 		}
+		public boolean getBool(String name){
+			var o=get(name);
+			if(o instanceof Boolean s) return s;
+			return Boolean.parseBoolean(o.toString());
+		}
 	}
 	
 	private static Config CONFIG_CACHE;

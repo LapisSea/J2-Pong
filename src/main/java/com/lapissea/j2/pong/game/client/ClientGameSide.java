@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class ClientGameSide{
-	private GameState state;
+	private final GameState state;
 	
-	private boolean      closed;
-	private long         profileId=-1;
-	private ActionSocket socket;
+	private       boolean      closed;
+	private       long         profileId=-1;
+	private final ActionSocket socket;
 	
 	private final Consumer<Message>     onMessage;
 	private final Consumer<Set<Status>> statusChange;
